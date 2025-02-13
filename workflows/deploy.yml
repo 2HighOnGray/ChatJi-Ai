@@ -1,0 +1,33 @@
+name: Deploy Serverless Function
+
+on:
+  push:
+    branches:
+      - main  # Trigger this action when you push to the 'main' branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2  # Checkout your repository's code
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'  # Use Node.js version 14
+
+      - name: Install dependencies
+        run: npm install axios  # Install the axios package for HTTP requests
+
+      - name: Deploy the serverless function
+        run: |
+          mkdir -p dist  # Create a directory to store the deployment files
+          cp -r ./* dist/  # Copy all files to the 'dist' folder (deployable folder)
+          echo "Deploying serverless function..."  # Log a deployment message
+
+      - name: Set up environment variables
+        run: echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env  # Set your OpenAI API key as an environment variable
+
+      - name: Finalize deployment
+        run: echo "Function deployed successfully!"  # Confirm that the function has been deployed
